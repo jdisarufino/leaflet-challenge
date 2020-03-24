@@ -14,29 +14,38 @@ L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={
   accessToken: API_KEY
 }).addTo(myMap);
 
-var requestURL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson";
-var data = d3.json(requestURL, function(response){
-  console.log(response.features);
-});
-
 
 function markerSize(magnitude) {
-  return magnitude * 40000;
+  return (magnitude) * 40000;
 }
 
+function styleInfo(feature) {
+  return {
+    opacity: .75,
+    fillOpacity: .5,
+    fillColor: "orange",
+    color: "white",
+    radius: markerSize(feature.properties.mag),
+    stroke: true,
+    weight: 0.5
+  };
+}
+
+var requestURL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson";
+
 d3.json(requestURL, function(response) {
-  console.log(response);
+var makingMap = {
   for (var i = 0; i < response.features.length; i++) {
     var latLong = [response.features[i].geometry.coordinates[1],response.features[i].geometry.coordinates[0]]
     var magnitude = response.features[i].properties.mag
     var where = response.features[i].properties.place
     var time = new Date(response.features[i].properties.time);
-    L.circle(latLong, {
-      fillOpacity: 0.5,
-      color: "white",
-      fillColor: "orange",
-      // Setting circle's radius equal to the output of our markerSize function
-      radius: markerSize(magnitude)
-    }).bindPopup("<h2>〰️ Magnitude: " + magnitude + "</h2> <hr> <p>Earthquake detected " + where + " at " + time.toISOString().slice(11,19) + " GMT</p>").addTo(myMap);
+    L.geoJSON(latLong, {
+      pointToLayer: function(feature, latLong){
+        return L.circleMarker(latLong);
+      }
+      style: styleInfo
+    })
   }
-});
+}
+}).bindPopup("<h2>〰️ Magnitude: " + magnitude + "</h2> <hr> <p>Earthquake detected " + where + " at " + time.toISOString().slice(11,19) + " GMT</p>");.addTo(myMap);
