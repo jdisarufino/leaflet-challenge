@@ -85,7 +85,7 @@ d3.json(requestURL, function(data) {
     var div = L.DomUtil.create("div", "info legend");
     var colors = [1,2,3,4,5,6,7,8];
     var labels = ["<1","<2","<3","<4","<5","<6","<7","<8"];
-    div.innerHTML = "<h3>Earthquake<br>Legend</h3><hr>";
+    div.innerHTML = "<h3>Earthquake<br>Legend</h3><p>(In last 24hrs)</p><hr>";
     // for loop to append HTML colors (var "colors" lookup) and labels (var "labels")
     colors.forEach(function(limit, index) {
       div.innerHTML += 
@@ -100,7 +100,9 @@ d3.json(requestURL, function(data) {
     // pass in div HTML elements
     return div;
   }
+  
   // slap to the map!
   geoCircles.addTo(myMap);
   iAmLegend.addTo(myMap);
+  title.addTo(myMap);
 });
