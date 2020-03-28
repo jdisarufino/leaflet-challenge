@@ -1,3 +1,6 @@
-static/api.js
+# Ignore mac os business
 .DS_Store
 .DS_Store?
+
+# Ignore API key
+*api.js
