@@ -3,4 +3,4 @@
 .DS_Store?
 
 # Ignore API key
-*api.js
+api.js
